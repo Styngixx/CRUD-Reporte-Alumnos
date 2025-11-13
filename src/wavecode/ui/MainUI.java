@@ -1,6 +1,8 @@
 package wavecode.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JPanel;
 import wavecode.panels.*;
 import wavecode.model.icon;
@@ -18,8 +20,16 @@ public class MainUI extends javax.swing.JFrame {
         ic.setHighQualityImage(logoStudent, "src/wavecode/images/StudentLogo.png");
         ic.setHighQualityImage(logoMatricula, "src/wavecode/images/matriculaLogo.png");
         ic.setHighQualityImage(logoRetiro, "src/wavecode/images/Retiro.png");
+        setTitle("WAVECODE 1.9.8 version BETA");
+        setIconImage(getIconImage());
     }
     
+    @Override
+         public final  Image getIconImage () {
+         Image retValue = Toolkit.getDefaultToolkit().getImage
+                                (ClassLoader.getSystemResource("wavecode/images/Wavecode.png"));
+            return retValue;
+    }
     private void mostrarPanel(JPanel p) {
         p.setSize(1070, 690);
         p.setLocation(0, 0);
