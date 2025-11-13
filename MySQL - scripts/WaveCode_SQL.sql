@@ -1,17 +1,19 @@
 CREATE DATABASE WaveCode;
 USE WaveCode;
 
-CREATE TABLE Alumno(
-	cod_Alumno INT  PRIMARY KEY, 
-	nombres VARCHAR(50) NOT NULL,
+CREATE TABLE Alumno (
+    cod_Alumno INT PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
     dni CHAR(8) NOT NULL UNIQUE,
     edad INT NOT NULL CHECK (edad BETWEEN 0 AND 120),
-    celular CHAR(9) UNIQUE NOT NULL, 
-	estado TINYINT NOT NULL CHECK (estado IN (0,1,2))
+    celular CHAR(9) UNIQUE NOT NULL,
+    estado TINYINT NOT NULL CHECK (estado IN (0,1,2))
 );
+
 SELECT * FROM Alumno;
 TRUNCATE TABLE Alumno;
+drop table alumno;
 
 INSERT INTO Alumno (cod_Alumno, nombres, apellidos, dni, edad, celular, estado) VALUES
 (2356426, 'Mateo Andrés', 'González Rivas', '12345678', 20, '981234567', 1),
@@ -47,16 +49,17 @@ INSERT INTO Alumno (cod_Alumno, nombres, apellidos, dni, edad, celular, estado) 
 
 -- SHOW VARIABLES LIKE 'version';
 
-CREATE TABLE Curso(
-	codigo_Curso INT PRIMARY KEY,
+CREATE TABLE Curso (
+    codigo_Curso INT PRIMARY KEY,
     asignatura VARCHAR(50) NOT NULL,
-    ciclo TINYINT NOT NULL CHECK(ciclo IN (0,1,2,3,4,5,6,7,8,9)),
-	creditos INT NOT NULL,
+    ciclo TINYINT NOT NULL CHECK (ciclo IN (0,1,2,3,4,5,6,7,8,9)),
+    creditos INT NOT NULL,
     horas INT NOT NULL,
-    dias VARCHAR(20) NOT NULL,         -- Ej: 'Lun-Mie-Vie' o 'Lun a Sab'
-    hora_inicio TIME NOT NULL,         -- Ej: '08:00:00'
-    hora_salida TIME NOT NULL          -- Ej: '10:00:00'
+    dias VARCHAR(20) NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_salida TIME NOT NULL
 );
+
 
 drop table Curso;
 
@@ -98,15 +101,20 @@ INSERT INTO Curso VALUES (202052, 'Arquitectura Empresarial', 8, 3, 3, 'Lun-Mie'
 SELECT * FROM Curso;
 
 
-CREATE TABLE Matricula(
-	numero_Matricula INT PRIMARY KEY,
+CREATE TABLE Matricula (
+    numero_Matricula INT PRIMARY KEY,
     codigo_Estudiante INT,
     codigo_Curso INT,
-    fecha DATE NOT NULL, 
+    fecha DATE NOT NULL,
     hora TIME NOT NULL,
-    CONSTRAINT fk_matricula_alumno FOREIGN KEY (codigo_Estudiante) REFERENCES Alumno(cod_Alumno),
-    CONSTRAINT fk_matricula_curso FOREIGN KEY (codigo_Curso) REFERENCES Curso(codigo_Curso)    
+    CONSTRAINT fk_matricula_alumno FOREIGN KEY (codigo_Estudiante)
+        REFERENCES Alumno(cod_Alumno)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_matricula_curso FOREIGN KEY (codigo_Curso)
+        REFERENCES Curso(codigo_Curso)
+        ON DELETE CASCADE
 );
+
 SELECT * FROM Matricula;
 
 INSERT INTO Matricula (numero_Matricula, codigo_Estudiante, codigo_Curso, fecha, hora) VALUES
@@ -145,14 +153,20 @@ Drop table Matricula;
 
 -- DROP TABLE MATRICULA;
 
-CREATE TABLE Retiro(
-	numero_Retiro INT PRIMARY KEY,
+CREATE TABLE Retiro (
+    numero_Retiro INT PRIMARY KEY,
     matricula INT,
-	fecha DATE NOT NULL, 
+    fecha DATE NOT NULL,
     hora TIME NOT NULL,
-	CONSTRAINT fk_retiro_matricula FOREIGN KEY (matricula) REFERENCES Matricula(numero_Matricula)       
+    CONSTRAINT fk_retiro_matricula FOREIGN KEY (matricula)
+        REFERENCES Matricula(numero_Matricula)
+        ON DELETE CASCADE
 );
+
+
 SELECT * FROM Retiro;
+DROP TABLE Retiro;
+use wavecode;
 
 INSERT INTO Retiro (numero_Retiro, matricula, fecha, hora) VALUES
 (4001, 3001, '2025-04-01', '09:00:00'),
