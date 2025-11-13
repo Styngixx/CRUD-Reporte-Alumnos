@@ -1,14 +1,17 @@
 package wavecode.model;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import javax.swing.Icon;
+import javax.swing.*;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class icon {
+
+    public icon() {
+    }
 
     public void setHighQualityImage(JLabel label, String imagePath) {
         try {
@@ -33,14 +36,25 @@ public class icon {
             e.printStackTrace();
         }
     }
-    
-        public void setimagenLabel(JLabel label, String root){
-        ImageIcon image = new ImageIcon(root);
-        Icon icon = new ImageIcon(image.getImage().getScaledInstance
-                    (label.getWidth(), 
-                     label.getHeight(), Image.SCALE_SMOOTH));
-        label.setIcon(icon);
+        
+    public void SetImagenLabel(JLabel label, String imagePath) {
+        if (label == null) {
+            System.err.println(" JLabel es null para: " + imagePath);
+            return;
+        }
+
+        int width = label.getWidth();
+        int height = label.getHeight();
+
+        if (width <= 0 || height <= 0) {
+            // Esperar al renderizado usando invokeLater
+            SwingUtilities.invokeLater(() -> SetImagenLabel(label, imagePath));
+            return;
+        }
+
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        label.setIcon(new ImageIcon(scaled));
     }
-    
-    
+
 }
