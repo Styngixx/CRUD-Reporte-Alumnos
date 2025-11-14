@@ -29,7 +29,7 @@ public class StudentDAO {
             ps.setInt(4, s.getDni());
             ps.setInt(5, s.getAge());
             ps.setInt(6, s.getPhone());
-            ps.setInt(1, s.getStatus());
+            ps.setInt(7, s.getStatus());
             return ps.executeUpdate(); 
         } catch (SQLException e) {
             System.out.println("Error al registrar al estudiante: " + e.getMessage());

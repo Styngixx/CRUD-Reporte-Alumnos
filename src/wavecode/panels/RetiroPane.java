@@ -129,17 +129,14 @@ public class RetiroPane extends javax.swing.JPanel {
         jPanel1.add(contenido1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 820, 190));
 
         or1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        or1.setForeground(new java.awt.Color(0, 0, 0));
         or1.setText("Aquí podes configurar los retiros.");
         jPanel1.add(or1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 300, 20));
 
         or2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        or2.setForeground(new java.awt.Color(0, 0, 0));
         or2.setText("En esta tabla estan los cursos disponibles:");
         jPanel1.add(or2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 290, -1));
 
         tittle1.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
-        tittle1.setForeground(new java.awt.Color(0, 0, 0));
         tittle1.setText("CONFIGURACIÓN DE RETIROS");
         jPanel1.add(tittle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 390, 50));
 
@@ -149,7 +146,7 @@ public class RetiroPane extends javax.swing.JPanel {
         jLabel15.setFont(new java.awt.Font("Roboto Medium", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(51, 51, 51));
         jLabel15.setText("Búsqueda por Código:");
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 150, -1));
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 160, -1));
         jPanel2.add(txtBuscado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 150, -1));
 
         labelBuscar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
