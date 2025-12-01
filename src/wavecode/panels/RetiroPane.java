@@ -68,17 +68,17 @@ public class RetiroPane extends javax.swing.JPanel {
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Numero Retiro", "Matricula", "Fecha", "Hora"
+                "Numero Retiro", "Matricula", "Fecha", "Hora", "Estado de Matricula"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -106,6 +106,8 @@ public class RetiroPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Número Retiro:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+
+        txtNroRetiro.setEditable(false);
         contenido1.add(txtNroRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 290, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -118,6 +120,8 @@ public class RetiroPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Número Matrícula:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 50, -1, -1));
+
+        txtNroMatricula.setEditable(false);
         contenido1.add(txtNroMatricula, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 280, -1));
 
         jLabel13.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -351,100 +355,121 @@ public class RetiroPane extends javax.swing.JPanel {
         txtHora.setText("");
     }
     
-      private void CharginTable(){
+    private void CharginTable(){
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
-        
+
         PreparedStatement ps;
         ResultSet rs;
         ResultSetMetaData rmds;
         int qeue;
-        
-        int[]length ={100,100,100,100};
+
+        // Ajustado para 5 columnas: Retiro, Matrícula, Fecha, Hora, Estado
+        int[]length ={100, 100, 100, 100, 80}; 
         for(int i= 0; i<tb.getColumnCount();i++){
-         tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
         }
-        
+
         try {
             ConnectionDB connDB = new ConnectionDB();
             java.sql.Connection cn = connDB.getConnection();
-            ps= cn.prepareStatement("SELECT * FROM Retiro ORDER BY fecha ASC, numero_Retiro ASC;");
-            rs=ps.executeQuery();
+
+            // --- SQL MODIFICADO: Añade el estado y el filtro 'estado = 2' ---
+            String sql = "SELECT r.numero_Retiro, r.matricula, r.fecha, r.hora, a.estado " + 
+                         "FROM Retiro r " +
+                         "JOIN matricula m ON r.matricula = m.numero_Matricula " + 
+                         "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +    
+                         "WHERE a.estado = 2 " + // FILTRO ESTADO = 2
+                         "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
+
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery();
             rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount();
-            
+            qeue = rmds.getColumnCount(); // qeue ahora será 5
+
             while (rs.next()) {
-                Object[] a = new Object[qeue];
+                Object[] a = new Object[qeue]; // Tamaño de array 5
                 for(int x = 0; x<qeue; x++){
                     a[x] = rs.getObject(x+1);
                 }
                 model.addRow(a);
             }
-                    
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,e.toString());
         }       
-    }     
-         	
-      
-      
-           //método para mostara la tabla 2 tb2
+    }
+    
+    
     private void CharginTable2(String filtro){
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
 
-            PreparedStatement ps;
-            ResultSet rs;
-            ResultSetMetaData rmds;
-            int qeue;
-            boolean searched = false;
-            
-            //int[]length ={60,210,40,40,40};
-            int[]length ={100,100,100,100};
-            for(int i= 0; i<tb.getColumnCount();i++){
-             tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
-            }
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rmds;
+        int qeue;
+        boolean searched = false;
 
-         try {
-                ConnectionDB connDB = new ConnectionDB();
-                java.sql.Connection cn = connDB.getConnection();
+        // Ajustado para 5 columnas: Retiro, Matrícula, Fecha, Hora, Estado
+        int[]length ={100, 100, 100, 100, 80};
+        for(int i= 0; i<tb.getColumnCount();i++){
+          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+        }
 
-                String sql;
-                if (filtro.equals("")) {
-                sql = "SELECT * FROM retiro;";
+        try {
+            ConnectionDB connDB = new ConnectionDB();
+            java.sql.Connection cn = connDB.getConnection();
+
+            String sql;
+
+            // Consulta base con JOINs y el filtro principal (estado = 2)
+            String baseSelect = "SELECT r.numero_Retiro, r.matricula, r.fecha, r.hora, a.estado " +
+                                "FROM Retiro r " +
+                                "JOIN matricula m ON r.matricula = m.numero_Matricula " + 
+                                "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +    
+                                "WHERE a.estado = 2 "; // FILTRO BASE
+
+            if (filtro.equals("")) {
+                // Caso 1: Sin filtro de búsqueda
+                sql = baseSelect + "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
                 ps = cn.prepareStatement(sql);
             } else {
-                sql = "SELECT * FROM retiro WHERE numero_Retiro LIKE ?;";
+                // Caso 2: Con filtro de búsqueda, añadimos el criterio al filtro base
+                sql = baseSelect + "AND r.numero_Retiro LIKE ? " + 
+                         "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
                 ps = cn.prepareStatement(sql);
                 ps.setString(1,"%"+filtro+ "%"); 
             }
-                rs=ps.executeQuery();
-                rmds = rs.getMetaData();
-                qeue = rmds.getColumnCount();
+
+            rs=ps.executeQuery();
+            rmds = rs.getMetaData();
+            qeue = rmds.getColumnCount(); // qeue ahora será 5
 
             while (rs.next()) {
-                    Object[] a = new Object[qeue];
-                    for(int x = 0; x<qeue; x++){
-                        a[x] = rs.getObject(x+1);
-                    }
-                    model.addRow(a);
-                    searched = true;
-                }
+                 Object[] a = new Object[qeue]; // Tamaño de array 5
+                 for(int x = 0; x<qeue; x++){
+                     a[x] = rs.getObject(x+1);
+                 }
+                 model.addRow(a);
+                 searched = true;
+             }
 
-                if(!filtro.equals("")){
-                    if (searched) {
-                        JOptionPane.showMessageDialog(null, "RETIRO ENCONTRADAO");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON RETIROS CON ESE CRITERIO");
-                        Cleanin();  
-                        txtBuscado.setText("");
-                    }
-                }        
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null,e.toString());
+            if(!filtro.equals("")){
+                if (searched) {
+                    JOptionPane.showMessageDialog(null, "RETIRO ENCONTRADO");
+                } else {
+                    JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON RETIROS CON ESE CRITERIO");
+                    Cleanin();
+                    txtBuscado.setText("");
+                }
             }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,e.toString());
+        }
     }
 
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contenido1;
     private javax.swing.JLabel jLabel10;

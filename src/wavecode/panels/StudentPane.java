@@ -1,10 +1,6 @@
 package wavecode.panels;
 
-import java.awt.Image;
 import java.sql.*;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -125,6 +121,8 @@ public class StudentPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Código del alumno:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+
+        txtCdAlumno.setEditable(false);
         contenido1.add(txtCdAlumno, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -137,6 +135,8 @@ public class StudentPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("DNI:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, -1, -1));
+
+        txtDni.setEditable(false);
         contenido1.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, 90, -1));
         contenido1.add(txtAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 70, 110, -1));
 
@@ -405,40 +405,45 @@ public class StudentPane extends javax.swing.JPanel {
         txtStatus.setText("");
     }
     
-      private void CharginTable(){
-        DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        model.setRowCount(0);
+        private void CharginTable(){
+    DefaultTableModel model = (DefaultTableModel) tb.getModel();
+    model.setRowCount(0);
+    
+    PreparedStatement ps;
+    ResultSet rs;
+    ResultSetMetaData rmds;
+    int qeue;
+    
+    int[]length ={60,210,100,40,40,70,80};
+    for(int i= 0; i<tb.getColumnCount();i++){
+        tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+    }
+    
+    try {
+        ConnectionDB connDB = new ConnectionDB();
+        java.sql.Connection cn = connDB.getConnection();
         
-        PreparedStatement ps;
-        ResultSet rs;
-        ResultSetMetaData rmds;
-        int qeue;
+        // --- CAMBIO CLAVE AQUÍ: Se añade WHERE estado = 0 ---
+        // Ahora solo selecciona alumnos cuyo estado es 0 (Registrado).
+        ps = cn.prepareStatement("SELECT * FROM Alumno WHERE estado = 0 ORDER BY cod_Alumno ASC;");
         
-        int[]length ={60,210,100,40,40,70,80};
-        for(int i= 0; i<tb.getColumnCount();i++){
-         tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
-        }
+        rs=ps.executeQuery();
+        rmds = rs.getMetaData();
+        qeue = rmds.getColumnCount();
         
-        try {
-            ConnectionDB connDB = new ConnectionDB();
-            java.sql.Connection cn = connDB.getConnection();
-            ps= cn.prepareStatement("SELECT * FROM Alumno ORDER BY estado ASC, cod_Alumno ASC;");
-            rs=ps.executeQuery();
-            rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount();
-            
-            while (rs.next()) {
-                Object[] a = new Object[qeue];
-                for(int x = 0; x<qeue; x++){
-                    a[x] = rs.getObject(x+1);
-                }
-                model.addRow(a);
+        while (rs.next()) {
+            Object[] a = new Object[qeue];
+            for(int x = 0; x<qeue; x++){
+                a[x] = rs.getObject(x+1);
             }
-                    
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e.toString());
-        }       
-    }     
+            model.addRow(a);
+        }
+                        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,e.toString());
+    }       
+}
+        
          	
       
       
@@ -447,58 +452,72 @@ public class StudentPane extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
 
-            PreparedStatement ps;
-            ResultSet rs;
-            ResultSetMetaData rmds;
-            int qeue;
-            boolean searched = false;
-            
-            //int[]length ={60,210,40,40,40};
-            int[]length ={60,210,100,40,40,70,80};
-            for(int i= 0; i<tb.getColumnCount();i++){
-             tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
-            }
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rmds;
+        int qeue;
+        boolean searched = false;
 
-         try {
-                ConnectionDB connDB = new ConnectionDB();
-                java.sql.Connection cn = connDB.getConnection();
+        // Configuración del ancho de columnas (se mantiene igual)
+        int[]length ={60,210,100,40,40,70,80};
+        for(int i= 0; i<tb.getColumnCount();i++){
+            tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+        }
 
-                String sql;
-                if (filtro.equals("")) {
-                sql = "SELECT * FROM alumno;";
+        try {
+            // Asumiendo que ConnectionDB funciona correctamente
+            ConnectionDB connDB = new ConnectionDB();
+            java.sql.Connection cn = connDB.getConnection();
+
+            String sql;
+
+            // --- CAMBIO CLAVE AQUÍ ---
+            if (filtro.equals("")) {
+                // Caso 1: Sin filtro de búsqueda, pero solo estado = 0
+                sql = "SELECT * FROM alumno WHERE estado = 0;";
                 ps = cn.prepareStatement(sql);
             } else {
-                sql = "SELECT * FROM alumno WHERE cod_Alumno LIKE ?;";
+                // Caso 2: Con filtro de búsqueda, restringiendo también estado = 0
+                // Nota: Aquí se asume que 'cod_Alumno' es el campo por el que buscas.
+                sql = "SELECT * FROM alumno WHERE estado = 0 AND cod_Alumno LIKE ?;";
                 ps = cn.prepareStatement(sql);
-                ps.setString(1,"%"+filtro+ "%"); 
+                ps.setString(1,"%"+filtro+ "%");
             }
-                rs=ps.executeQuery();
-                rmds = rs.getMetaData();
-                qeue = rmds.getColumnCount();
+            // --- FIN CAMBIO CLAVE ---
+
+            rs=ps.executeQuery();
+            rmds = rs.getMetaData();
+            qeue = rmds.getColumnCount();
 
             while (rs.next()) {
-                    Object[] a = new Object[qeue];
-                    for(int x = 0; x<qeue; x++){
-                        a[x] = rs.getObject(x+1);
-                    }
-                    model.addRow(a);
-                    searched = true;
+                Object[] a = new Object[qeue];
+                for(int x = 0; x<qeue; x++){
+                    a[x] = rs.getObject(x+1);
                 }
-
-                if(!filtro.equals("")){
-                    if (searched) {
-                        JOptionPane.showMessageDialog(null, "ALUMNO ENCONTRADO");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON ALUMNOS CON ESE CRITERIO");
-                        Cleanin();  
-                        txtBuscado.setText("");
-                    }
-                }        
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null,e.toString());
+                model.addRow(a);
+                searched = true;
             }
-        
-    }
+
+            // ... El manejo de mensajes (JOptionPane) se mantiene igual ...
+
+            if(!filtro.equals("")){
+                if (searched) {
+                    JOptionPane.showMessageDialog(null, "ALUMNO ENCONTRADO");
+                } else {
+                    // El mensaje ahora significa que no se encontró en el estado 0.
+                    JOptionPane.showMessageDialog(
+                            null, 
+                            "NO SE ENCONTRARON ALUMNOS CON ESE CRITERIO EN ESTADO REGISTRADO (0)");
+                    // Asumiendo que Cleanin() y txtBuscado existen
+                    // Cleanin();  
+                    // txtBuscado.setText("");
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,e.toString());
+            }
+
+}
 
 
 

@@ -70,17 +70,17 @@ public class MatriculaPane extends javax.swing.JPanel {
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Matrícula", "Cod Estudiante", "Cod Curso", "Fecha", "Hora"
+                "Matrícula", "Estudiante", "Asignatura", "Fecha de la Matricula", "Hora de la Matricula", "Estado del Estudiante"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -108,6 +108,8 @@ public class MatriculaPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Número Matrícula:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
+
+        txtNroMatricula.setEditable(false);
         contenido1.add(txtNroMatricula, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -120,7 +122,11 @@ public class MatriculaPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Código Estudiante:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, -1, -1));
+
+        txtCdEstudiante.setEditable(false);
         contenido1.add(txtCdEstudiante, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, 130, -1));
+
+        txtCdCurso.setEditable(false);
         contenido1.add(txtCdCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 120, -1));
 
         jLabel11.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -367,28 +373,43 @@ public class MatriculaPane extends javax.swing.JPanel {
         txtHora.setText("");
     }
     
-      private void CharginTable(){
+        private void CharginTable(){
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
-        
+
         PreparedStatement ps;
         ResultSet rs;
         ResultSetMetaData rmds;
         int qeue;
-        
-        int[]length ={60,100,100,70,80};
+
+        // El largo de las columnas ajustado a las 6 columnas visibles
+        int[]length ={60, 180, 180, 70, 80, 60}; 
         for(int i= 0; i<tb.getColumnCount();i++){
-         tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
         }
-        
+
         try {
             ConnectionDB connDB = new ConnectionDB();
             java.sql.Connection cn = connDB.getConnection();
-            ps= cn.prepareStatement("SELECT * FROM Matricula ORDER BY fecha ASC, numero_Matricula ASC;");
-            rs=ps.executeQuery();
+
+            // --- CAMBIO CLAVE: Se añade el filtro WHERE a.estado = 1 ---
+            String sql = "SELECT m.numero_Matricula, " +
+                         "CONCAT(a.nombres, ' ', a.apellidos) AS nombre_estudiante, " +
+                         "c.asignatura, " +
+                         "m.fecha, " +
+                         "m.hora, " +
+                         "a.estado " + 
+                         "FROM matricula m " +
+                         "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
+                         "JOIN curso c ON m.codigo_Curso = c.codigo_Curso " +
+                         "WHERE a.estado = 1 " + // <--- ¡FILTRO APLICADO!
+                         "ORDER BY m.fecha ASC, m.numero_Matricula ASC;";
+
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery();
             rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount();
-            
+            qeue = rmds.getColumnCount(); 
+
             while (rs.next()) {
                 Object[] a = new Object[qeue];
                 for(int x = 0; x<qeue; x++){
@@ -396,71 +417,88 @@ public class MatriculaPane extends javax.swing.JPanel {
                 }
                 model.addRow(a);
             }
-                    
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,e.toString());
         }       
-    }     
-         	
-      
-      
-           //método para mostara la tabla 2 tb2
-    private void CharginTable2(String filtro){
+    }
+        
+      private void CharginTable2(String filtro){
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
 
-            PreparedStatement ps;
-            ResultSet rs;
-            ResultSetMetaData rmds;
-            int qeue;
-            boolean searched = false;
-            
-            //int[]length ={60,210,40,40,40};
-            int[]length ={60,100,100,70,80};
-            for(int i= 0; i<tb.getColumnCount();i++){
-             tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
-            }
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rmds;
+        int qeue;
+        boolean searched = false;
 
-         try {
-                ConnectionDB connDB = new ConnectionDB();
-                java.sql.Connection cn = connDB.getConnection();
+        // El largo de las columnas ajustado a las 6 columnas visibles
+        int[]length ={60, 180, 180, 70, 80, 60}; 
+        for(int i= 0; i<tb.getColumnCount();i++){
+          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+        }
 
-                String sql;
-                if (filtro.equals("")) {
-                sql = "SELECT * FROM matricula;";
+        try {
+            ConnectionDB connDB = new ConnectionDB();
+            java.sql.Connection cn = connDB.getConnection();
+
+            String sql;
+
+            // Consulta base para seleccionar Nombres y Estado
+            String baseSelect = "SELECT m.numero_Matricula, " +
+                             "CONCAT(a.nombres, ' ', a.apellidos) AS nombre_estudiante, " +
+                             "c.asignatura, " +
+                             "m.fecha, " +
+                             "m.hora, " +
+                             "a.estado " + 
+                             "FROM matricula m " +
+                             "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
+                             "JOIN curso c ON m.codigo_Curso = c.codigo_Curso " +
+                             "WHERE a.estado = 1 "; // <--- FILTRO BASE APLICADO
+
+            if (filtro.equals("")) {
+                // Caso 1: Sin filtro de búsqueda
+                sql = baseSelect + "ORDER BY m.fecha ASC;";
                 ps = cn.prepareStatement(sql);
             } else {
-                sql = "SELECT * FROM matricula WHERE numero_Matricula LIKE ?;";
+                // Caso 2: Con filtro de búsqueda, añadimos el criterio de búsqueda (manteniendo el filtro estado=1)
+                sql = baseSelect + "AND (CONCAT(a.nombres, ' ', a.apellidos) LIKE ? OR c.asignatura LIKE ?) " +
+                         "ORDER BY m.fecha ASC;";
                 ps = cn.prepareStatement(sql);
-                ps.setString(1,"%"+filtro+ "%"); 
+                ps.setString(1,"%"+filtro+ "%"); // Busca por Nombre Estudiante
+                ps.setString(2,"%"+filtro+ "%"); // Busca por Nombre Curso
             }
-                rs=ps.executeQuery();
-                rmds = rs.getMetaData();
-                qeue = rmds.getColumnCount();
+
+            rs=ps.executeQuery();
+            rmds = rs.getMetaData();
+            qeue = rmds.getColumnCount(); 
 
             while (rs.next()) {
-                    Object[] a = new Object[qeue];
-                    for(int x = 0; x<qeue; x++){
-                        a[x] = rs.getObject(x+1);
-                    }
-                    model.addRow(a);
-                    searched = true;
+                Object[] a = new Object[qeue];
+                for(int x = 0; x<qeue; x++){
+                    a[x] = rs.getObject(x+1);
                 }
-
-                if(!filtro.equals("")){
-                    if (searched) {
-                        JOptionPane.showMessageDialog(null, "MATRÍCULA ENCONTRADA");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON MATRICULAS CON ESE CRITERIO");
-                        Cleanin();  
-                        txtBuscado.setText("");
-                    }
-                }        
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null,e.toString());
+                model.addRow(a);
+                searched = true;
             }
-        
-    }
+
+            if(!filtro.equals("")){
+                if (searched) {
+                    JOptionPane.showMessageDialog(null, "MATRÍCULA ENCONTRADA");
+                } else {
+                    // Mensaje ajustado: si no se encuentra, es porque no está matriculado O no coincide con el filtro.
+                    JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON MATRÍCULAS ACTIVAS CON ESE CRITERIO");
+                    // Cleanin();  
+                    // txtBuscado.setText("");
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,e.toString());
+        }
+    }      
+
+      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contenido1;

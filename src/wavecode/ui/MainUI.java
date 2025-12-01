@@ -70,7 +70,7 @@ public class MainUI extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(102, 102, 102));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        bgLista.setBackground(new java.awt.Color(12, 94, 94));
+        bgLista.setBackground(new java.awt.Color(142, 181, 204));
         bgLista.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         CoursePane.setBackground(new java.awt.Color(108, 150, 150));
@@ -143,7 +143,7 @@ public class MainUI extends javax.swing.JFrame {
 
         jPanel1.add(bgLista, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 710));
 
-        bgCt.setBackground(new java.awt.Color(51, 138, 159));
+        bgCt.setBackground(new java.awt.Color(111, 161, 190));
         bgCt.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout bgContenidoLayout = new javax.swing.GroupLayout(bgContenido);
