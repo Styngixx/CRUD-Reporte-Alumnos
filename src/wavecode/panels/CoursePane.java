@@ -75,7 +75,7 @@ public class CoursePane extends javax.swing.JPanel {
         logoDelete = new javax.swing.JLabel();
         logoUpdate = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(51, 138, 159));
+        jPanel1.setBackground(new java.awt.Color(142, 181, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
@@ -119,8 +119,6 @@ public class CoursePane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Código del curso:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
-
-        txtCdCurso.setEditable(false);
         contenido1.add(txtCdCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -249,7 +247,7 @@ public class CoursePane extends javax.swing.JPanel {
                 logoInsertarMouseClicked(evt);
             }
         });
-        jPanel1.add(logoInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 520, 80, 70));
+        jPanel1.add(logoInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 400, 80, 80));
 
         logoDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoDelete.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -257,7 +255,7 @@ public class CoursePane extends javax.swing.JPanel {
                 logoDeleteMouseClicked(evt);
             }
         });
-        jPanel1.add(logoDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 610, 80, 60));
+        jPanel1.add(logoDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 580, 80, 80));
 
         logoUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -265,7 +263,7 @@ public class CoursePane extends javax.swing.JPanel {
                 logoUpdateMouseClicked(evt);
             }
         });
-        jPanel1.add(logoUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 520, 70, 70));
+        jPanel1.add(logoUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 490, 80, 80));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

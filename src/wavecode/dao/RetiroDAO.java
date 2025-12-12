@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import wavecode.database.ConnectionDB;
 import wavecode.model.Retiro;
+import java.sql.*;
 
 /**
  *
@@ -18,49 +19,153 @@ public class RetiroDAO {
         this.cnn = connDB.getConnection();
     }   
          
-    //Adding method this bs is actually the best code ever 
-    public int addRetiro(Retiro r){
-        String sql ="INSERT INTO Retiro (numero_Retiro, matricula, fecha, hora) VALUES(?,?,?,?);";
+   // Método para registrar el retiro.
+    // Cambia el estado del alumno de 1 (Matriculado) a 2 (Retirado).
+    public int addRetiro(Retiro r, int studentStatus){
+        String sqlGetStudent = "SELECT codigo_Estudiante FROM Matricula WHERE numero_Matricula = ?";
+        String sqlRetiro ="INSERT INTO Retiro (numero_Retiro, matricula, fecha, hora) VALUES(?,?,?,?);";
+        String sqlUpdateAlumno = "UPDATE Alumno SET estado = ? WHERE cod_Alumno = ?;"; 
+        
         try {
-            PreparedStatement ps = cnn.prepareStatement(sql);
-            ps.setInt(1, r.getNroRetiro());
-            ps.setInt(2, r.getMatricula());
-            ps.setString(3, r.getFecha());
-            ps.setString(4, r.getHora());
-            return ps.executeUpdate(); 
+            cnn.setAutoCommit(false); // Iniciar transacción
+
+            // 1. Obtener el código del alumno a partir de la matrícula
+            // Esto es necesario para saber a qué alumno actualizarle el estado
+            int codEstudiante = -1;
+            PreparedStatement psGet = cnn.prepareStatement(sqlGetStudent);
+            psGet.setInt(1, r.getMatricula());
+            ResultSet rs = psGet.executeQuery();
+            
+            if (rs.next()) {
+                codEstudiante = rs.getInt("codigo_Estudiante");
+            } else {
+                // Si la matrícula no existe, no podemos continuar
+                cnn.rollback();
+                return 0;
+            }
+
+            // 2. Insertar el Retiro
+            PreparedStatement psRetiro = cnn.prepareStatement(sqlRetiro);
+            psRetiro.setInt(1, r.getNroRetiro());
+            psRetiro.setInt(2, r.getMatricula());
+            psRetiro.setString(3, r.getFecha());
+            psRetiro.setString(4, r.getHora());
+            psRetiro.executeUpdate(); 
+            
+            // 3. Actualizar el estado del alumno (a 2)
+            PreparedStatement psUpdateAlumno = cnn.prepareStatement(sqlUpdateAlumno);
+            psUpdateAlumno.setInt(1, studentStatus); 
+            psUpdateAlumno.setInt(2, codEstudiante);
+            psUpdateAlumno.executeUpdate();
+            
+            cnn.commit(); // Confirmar cambios
+            return 1;
+
         } catch (SQLException e) {
             System.out.println("Error al registrar el retiro: " + e.getMessage());
+            try { cnn.rollback(); } catch (SQLException ex) {} // Deshacer
             return 0;
+        } finally {
+            try { cnn.setAutoCommit(true); } catch (SQLException ex) {}
         }
     }   
     
-    //Updating a value which already exist LMAOooo
-    public int updateRetiro(Retiro r){
-        String sql = "UPDATE Retiro SET matricula=?, fecha=?, hora=? WHERE numero_Retiro=?;";
+    // Método para actualizar datos del retiro (fecha, hora, etc.)
+    public int updateRetiro(Retiro r, int studentStatus){
+        // Primero necesitamos saber el alumno actual por si cambió la matrícula asociada
+        String sqlGetStudent = "SELECT codigo_Estudiante FROM Matricula WHERE numero_Matricula = ?";
+        String sqlRetiro = "UPDATE Retiro SET matricula=?, fecha=?, hora=? WHERE numero_Retiro=?;";
+        String sqlUpdateAlumno = "UPDATE Alumno SET estado = ? WHERE cod_Alumno = ?;"; 
+        
         try {
-            PreparedStatement ps = cnn.prepareStatement(sql);            
-            ps.setInt(1, r.getMatricula());
-            ps.setString(2, r.getFecha());
-            ps.setString(3, r.getHora());
-            ps.setInt(4, r.getNroRetiro());
-            return ps.executeUpdate();            
+            cnn.setAutoCommit(false);
+
+            // 1. Obtener ID alumno (para asegurar consistencia)
+            int codEstudiante = -1;
+            PreparedStatement psGet = cnn.prepareStatement(sqlGetStudent);
+            psGet.setInt(1, r.getMatricula());
+            ResultSet rs = psGet.executeQuery();
+            if (rs.next()) {
+                codEstudiante = rs.getInt("codigo_Estudiante");
+            } else {
+                cnn.rollback(); return 0;
+            }
+
+            // 2. Actualizar el Retiro
+            PreparedStatement psRetiro = cnn.prepareStatement(sqlRetiro);            
+            psRetiro.setInt(1, r.getMatricula());
+            psRetiro.setString(2, r.getFecha());
+            psRetiro.setString(3, r.getHora());
+            psRetiro.setInt(4, r.getNroRetiro());
+            psRetiro.executeUpdate();            
+            
+            // 3. Reafirmar el estado del alumno (generalmente sigue siendo 2)
+            PreparedStatement psUpdateAlumno = cnn.prepareStatement(sqlUpdateAlumno);
+            psUpdateAlumno.setInt(1, studentStatus); 
+            psUpdateAlumno.setInt(2, codEstudiante);
+            psUpdateAlumno.executeUpdate();
+
+            cnn.commit();
+            return 1;            
+
         } catch (SQLException e) {
-           System.out.println("Error al actualizar los valores del retiro: " + e.getMessage());
-            return 0;
-        }        
+           System.out.println("Error al actualizar el retiro: " + e.getMessage());
+           try { cnn.rollback(); } catch (SQLException ex) {}
+           return 0;
+        } finally {
+            try { cnn.setAutoCommit(true); } catch (SQLException ex) {}
+        }       
     }
     
-    //Deleting a value which already exist Lol and love this one cuz its easier than other functions btw
-    public int deleteRetiro(Retiro r){
-        String sql = "DELETE FROM Retiro  WHERE numero_Retiro=?; ";
+    // Método para eliminar retiro.
+    // IMPORTANTE: Restaura el estado del alumno a 1 (Matriculado).
+    public int deleteRetiro(Retiro r, int studentStatus){
+        // Consulta para encontrar al alumno a través del retiro antes de borrarlo
+        String sqlGetStudentFromRetiro = 
+                "SELECT m.codigo_Estudiante FROM Retiro r " +
+                "JOIN Matricula m ON r.matricula = m.numero_Matricula " +
+                "WHERE r.numero_Retiro = ?";
+        
+        String sqlRetiro = "DELETE FROM Retiro WHERE numero_Retiro=?; ";
+        String sqlUpdateAlumno = "UPDATE Alumno SET estado = ? WHERE cod_Alumno = ?;";
+        
         try {
-            PreparedStatement ps = cnn.prepareStatement(sql);
-            ps.setInt(1, r.getNroRetiro());
-            return ps.executeUpdate();
+            cnn.setAutoCommit(false);
+
+            // 1. Averiguar qué alumno está implicado en este retiro
+            int codEstudiante = -1;
+            PreparedStatement psGet = cnn.prepareStatement(sqlGetStudentFromRetiro);
+            psGet.setInt(1, r.getNroRetiro());
+            ResultSet rs = psGet.executeQuery();
+            
+            if(rs.next()){
+                codEstudiante = rs.getInt("codigo_Estudiante");
+            } else {
+                // Si no se encuentra el retiro o el alumno, abortar
+                cnn.rollback();
+                return 0;
+            }
+
+            // 2. Eliminar el Retiro
+            PreparedStatement psRetiro = cnn.prepareStatement(sqlRetiro);
+            psRetiro.setInt(1, r.getNroRetiro());
+            psRetiro.executeUpdate();
+            
+            // 3. Restaurar el estado del alumno (a 1)
+            PreparedStatement psUpdateAlumno = cnn.prepareStatement(sqlUpdateAlumno);
+            psUpdateAlumno.setInt(1, studentStatus); 
+            psUpdateAlumno.setInt(2, codEstudiante);
+            psUpdateAlumno.executeUpdate();
+
+            cnn.commit();
+            return 1;
+
         } catch (SQLException e) {
-            System.out.println("Error al eliminar los datos del retiro: "+ e.getMessage());
+            System.out.println("Error al eliminar el retiro: "+ e.getMessage());
+            try { cnn.rollback(); } catch (SQLException ex) {}
             return 0;
-        }        
+        } finally {
+            try { cnn.setAutoCommit(true); } catch (SQLException ex) {}
+        }       
     }
-    
 }

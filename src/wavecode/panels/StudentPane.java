@@ -77,7 +77,7 @@ public class StudentPane extends javax.swing.JPanel {
         jRadioButtonMenuItem1.setSelected(true);
         jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
 
-        bg.setBackground(new java.awt.Color(51, 138, 159));
+        bg.setBackground(new java.awt.Color(142, 181, 204));
         bg.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
@@ -121,8 +121,6 @@ public class StudentPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Código del alumno:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
-
-        txtCdAlumno.setEditable(false);
         contenido1.add(txtCdAlumno, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -135,8 +133,6 @@ public class StudentPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("DNI:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, -1, -1));
-
-        txtDni.setEditable(false);
         contenido1.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, 90, -1));
         contenido1.add(txtAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 70, 110, -1));
 
@@ -159,8 +155,8 @@ public class StudentPane extends javax.swing.JPanel {
 
         jLabel16.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel16.setText("Estado:");
-        contenido1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, 70, -1));
+        jLabel16.setText("Estado  (0/1):");
+        contenido1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, 100, -1));
         contenido1.add(txtStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 70, 130, -1));
 
         bg.add(contenido1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 820, 190));
@@ -174,8 +170,8 @@ public class StudentPane extends javax.swing.JPanel {
         bg.add(or2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 290, -1));
 
         tittle1.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
-        tittle1.setText("CONFIGURACIÓN DE ALUMNOS");
-        bg.add(tittle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 390, 50));
+        tittle1.setText("CONFIGURACIÓN DE ALUMNOS REGISTRADOS");
+        bg.add(tittle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 520, 50));
 
         jPanel2.setBackground(new java.awt.Color(116, 162, 192));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -247,7 +243,7 @@ public class StudentPane extends javax.swing.JPanel {
                 logoInsertMouseClicked(evt);
             }
         });
-        bg.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 520, 80, 70));
+        bg.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 390, 80, 80));
 
         logoDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoDel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -255,7 +251,7 @@ public class StudentPane extends javax.swing.JPanel {
                 logoDelMouseClicked(evt);
             }
         });
-        bg.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 610, 80, 60));
+        bg.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 590, 80, 80));
 
         logoUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoUp.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -263,7 +259,7 @@ public class StudentPane extends javax.swing.JPanel {
                 logoUpMouseClicked(evt);
             }
         });
-        bg.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 520, 70, 70));
+        bg.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 490, 80, 80));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -302,6 +298,10 @@ public class StudentPane extends javax.swing.JPanel {
                 txtAge.setText(rs.getString("edad"));
                 txtPhone.setText(rs.getString("celular"));
                 txtStatus.setText(rs.getString("estado"));
+                
+                // REGLA: No se pueden editar DNI ni Código al actualizar
+                txtCdAlumno.setEditable(false);
+                txtDni.setEditable(false);
             }
 
         } catch (Exception e) {
@@ -327,71 +327,85 @@ public class StudentPane extends javax.swing.JPanel {
 
     private void logoInsertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoInsertMouseClicked
         // TODO add your handling code here:
-        int codigo = Integer.parseInt(txtCdAlumno.getText());
-        String nombre = txtName.getText();
-        String apellido = txtSurnames.getText();
-        int dni = Integer.parseInt(txtDni.getText());
-        int edad = Integer.parseInt(txtAge.getText());
-        int celular = Integer.parseInt(txtPhone.getText());
-        int estado = Integer.parseInt(txtStatus.getText());
+        try {
+            int codigo = Integer.parseInt(txtCdAlumno.getText());
+            String nombre = txtName.getText();
+            String apellido = txtSurnames.getText();
+            int dni = Integer.parseInt(txtDni.getText());
+            int edad = Integer.parseInt(txtAge.getText());
+            int celular = Integer.parseInt(txtPhone.getText());
+            int estado = 0;
+            // REGLA: El estado por defecto para INSERTAR ALUMNO debe ser 0 (REGISTRADO)
+            // Si el usuario pone algo diferente, se le avisa o se fuerza a 0.
+            // Para este ejemplo, lo validamos.
+            if (estado != 0) {
+                JOptionPane.showMessageDialog(null, "Al registrar un nuevo alumno, el estado debe ser 0.");
+                return;
+            }
 
-        Student st = new Student(codigo, nombre, apellido, dni, edad, celular, estado);
-        StudentService service = new StudentService();
+            Student st = new Student(codigo, nombre, apellido, dni, edad, celular, estado);
+            StudentService service = new StudentService();
 
-        if(service.addStudent(st)){
-            JOptionPane.showMessageDialog(null, "ALUMNO REGISTRADO CON EXITO");
+            if(service.addStudent(st)){
+                JOptionPane.showMessageDialog(null, "ALUMNO REGISTRADO CON EXITO");
 
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR EN EL REGISTRO DEL ALUMNO");
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR EN EL REGISTRO DEL ALUMNO. Verifique si el Código o DNI ya existen.");
+            }
+            CharginTable();
+            Cleanin();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que todos los campos numéricos están llenos.");
         }
-        CharginTable();
-        Cleanin();
     }//GEN-LAST:event_logoInsertMouseClicked
 
     private void logoDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoDelMouseClicked
         // TODO add your handling code here:
-        int codigo = Integer.parseInt(txtCdAlumno.getText());
-        String nombre = txtName.getText();
-        String apellido = txtSurnames.getText();
-        int dni = Integer.parseInt(txtDni.getText());
-        int edad = Integer.parseInt(txtAge.getText());
-        int celular = Integer.parseInt(txtPhone.getText());
-        int estado = Integer.parseInt(txtStatus.getText());
+       try {
+            int codigo = Integer.parseInt(txtCdAlumno.getText());
+            
+            // Lógica para borrar (solo necesita el ID)
+            Student st = new Student(codigo, "", "", 0, 0, 0, 0); 
+            StudentService service = new StudentService();
 
-        Student st = new Student(codigo, nombre, apellido, dni, edad, celular, estado);
-        StudentService service = new StudentService();
+            if(service.deleteStudent(st)){
+                JOptionPane.showMessageDialog(null, "ALUMNO ELIMINADO");
 
-        if(service.deleteStudent(st)){
-            JOptionPane.showMessageDialog(null, "ALUMNO ELIMINADO");
-
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR AL ELIMINAR ALUMNO");
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR AL ELIMINAR ALUMNO");
+            }
+            Cleanin();
+            CharginTable();
+        } catch (NumberFormatException e) {
+             JOptionPane.showMessageDialog(null, "Seleccione un alumno de la tabla para eliminar.");
         }
-        Cleanin();
-        CharginTable();
     }//GEN-LAST:event_logoDelMouseClicked
 
     private void logoUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoUpMouseClicked
         // TODO add your handling code here:
-        int codigo = Integer.parseInt(txtCdAlumno.getText());
-        String nombre = txtName.getText();
-        String apellido = txtSurnames.getText();
-        int dni = Integer.parseInt(txtDni.getText());
-        int edad = Integer.parseInt(txtAge.getText());
-        int celular = Integer.parseInt(txtPhone.getText());
-        int estado = Integer.parseInt(txtStatus.getText());
+       try {
+            int codigo = Integer.parseInt(txtCdAlumno.getText());
+            String nombre = txtName.getText();
+            String apellido = txtSurnames.getText();
+            int dni = Integer.parseInt(txtDni.getText()); // Se lee pero no se actualiza en BD si DAO lo restringe
+            int edad = Integer.parseInt(txtAge.getText());
+            int celular = Integer.parseInt(txtPhone.getText());
+            int estado = Integer.parseInt(txtStatus.getText());
 
-        Student st = new Student(codigo, nombre, apellido, dni, edad, celular, estado);
-        StudentService service = new StudentService();
+            Student st = new Student(codigo, nombre, apellido, dni, edad, celular, estado);
+            StudentService service = new StudentService();
 
-        if(service.updateStudent(st)){
-            JOptionPane.showMessageDialog(null, "ALUMNO MODIFICADO");
+            if(service.updateStudent(st)){
+                JOptionPane.showMessageDialog(null, "ALUMNO MODIFICADO");
 
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR AL MODIFICAR EL ALUMNO");
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR AL MODIFICAR EL ALUMNO");
+            }
+            Cleanin();
+            CharginTable();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error de formato.");
         }
-        Cleanin();
-        CharginTable();
     }//GEN-LAST:event_logoUpMouseClicked
 
     
@@ -403,6 +417,9 @@ public class StudentPane extends javax.swing.JPanel {
         txtPhone.setText("");
         txtSurnames.setText("");
         txtStatus.setText("");
+        // Restaurar edición para inserción
+        txtCdAlumno.setEditable(true);
+        txtDni.setEditable(true);
     }
     
         private void CharginTable(){
@@ -422,10 +439,9 @@ public class StudentPane extends javax.swing.JPanel {
     try {
         ConnectionDB connDB = new ConnectionDB();
         java.sql.Connection cn = connDB.getConnection();
-        
-        // --- CAMBIO CLAVE AQUÍ: Se añade WHERE estado = 0 ---
-        // Ahora solo selecciona alumnos cuyo estado es 0 (Registrado).
-        ps = cn.prepareStatement("SELECT * FROM Alumno WHERE estado = 0 ORDER BY cod_Alumno ASC;");
+        String sql = "SELECT * FROM Alumno WHERE estado = 0 ORDER BY cod_Alumno ASC;";
+        // FILTRO REQUERIDO: SOLO estado = 0
+        ps = cn.prepareStatement(sql);
         
         rs=ps.executeQuery();
         rmds = rs.getMetaData();
@@ -445,10 +461,7 @@ public class StudentPane extends javax.swing.JPanel {
 }
         
          	
-      
-      
-           //método para mostara la tabla 2 tb2
-    private void CharginTable2(String filtro){
+   private void CharginTable2(String filtro){
         DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
 
@@ -479,6 +492,7 @@ public class StudentPane extends javax.swing.JPanel {
             } else {
                 // Caso 2: Con filtro de búsqueda, restringiendo también estado = 0
                 // Nota: Aquí se asume que 'cod_Alumno' es el campo por el que buscas.
+                
                 sql = "SELECT * FROM alumno WHERE estado = 0 AND cod_Alumno LIKE ?;";
                 ps = cn.prepareStatement(sql);
                 ps.setString(1,"%"+filtro+ "%");

@@ -46,9 +46,9 @@ public class MatriculaPane extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         txtCdEstudiante = new javax.swing.JTextField();
         txtCdCurso = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         txtHora = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
         or1 = new javax.swing.JLabel();
         or2 = new javax.swing.JLabel();
         tittle1 = new javax.swing.JLabel();
@@ -64,23 +64,23 @@ public class MatriculaPane extends javax.swing.JPanel {
         logoDel = new javax.swing.JLabel();
         logoUp = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(51, 138, 159));
+        jPanel1.setBackground(new java.awt.Color(142, 181, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Matrícula", "Estudiante", "Asignatura", "Fecha de la Matricula", "Hora de la Matricula", "Estado del Estudiante"
+                "Número de Matrícula", "Código del Estudiante", "Código del Curso", "Fecha de la Matricula", "Hora de la Matricula"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -108,8 +108,6 @@ public class MatriculaPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Número Matrícula:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
-
-        txtNroMatricula.setEditable(false);
         contenido1.add(txtNroMatricula, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -122,23 +120,19 @@ public class MatriculaPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Código Estudiante:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, -1, -1));
-
-        txtCdEstudiante.setEditable(false);
         contenido1.add(txtCdEstudiante, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 70, 130, -1));
-
-        txtCdCurso.setEditable(false);
         contenido1.add(txtCdCurso, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 120, -1));
-
-        jLabel11.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel11.setText("Código Curso:");
-        contenido1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, -1, -1));
 
         jLabel13.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(51, 51, 51));
         jLabel13.setText("Hora:");
         contenido1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, -1, -1));
         contenido1.add(txtHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, 290, -1));
+
+        jLabel12.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel12.setText("Código Curso:");
+        contenido1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, -1, -1));
 
         jPanel1.add(contenido1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 490, 820, 190));
 
@@ -224,7 +218,7 @@ public class MatriculaPane extends javax.swing.JPanel {
                 logoInsertMouseClicked(evt);
             }
         });
-        jPanel1.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 520, 80, 70));
+        jPanel1.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 390, 90, 70));
 
         logoDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoDel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -232,7 +226,7 @@ public class MatriculaPane extends javax.swing.JPanel {
                 logoDelMouseClicked(evt);
             }
         });
-        jPanel1.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 610, 80, 60));
+        jPanel1.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 580, 90, 70));
 
         logoUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoUp.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -240,7 +234,7 @@ public class MatriculaPane extends javax.swing.JPanel {
                 logoUpMouseClicked(evt);
             }
         });
-        jPanel1.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 520, 80, 70));
+        jPanel1.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 480, 90, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -276,7 +270,8 @@ public class MatriculaPane extends javax.swing.JPanel {
                 txtHora.setText(rs.getString("hora"));
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_tbMouseClicked
 
@@ -297,73 +292,136 @@ public class MatriculaPane extends javax.swing.JPanel {
         txtBuscado.setText("");
     }//GEN-LAST:event_labelReiniciarMouseClicked
 
-    
-    
-    
-    private void logoInsertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoInsertMouseClicked
-        // TODO add your handling code here:
-        int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
-        int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
-        int codCurso = Integer.parseInt(txtCdCurso.getText());
-        String fecha = txtDate.getText();
-        String hora = txtHora.getText();
-        
-        Matricula m = new Matricula(nroMatricula, codEstudiante, codCurso, fecha, hora);
-        MatriculaService service = new MatriculaService();
-                
-
-        if(service.addMatricula(m)){
-            JOptionPane.showMessageDialog(null, "MATRÍCULA REGISTRADA CON EXITO");
-
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR EN EL REGISTRO DE LA MATRÍCULA");
-        }
-        CharginTable();
-        Cleanin();
-    }//GEN-LAST:event_logoInsertMouseClicked
-
-    private void logoDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoDelMouseClicked
-        // TODO add your handling code here:
-        int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
-        int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
-        int codCurso = Integer.parseInt(txtCdCurso.getText());
-        String fecha = txtDate.getText();
-        String hora = txtHora.getText();
-        
-        Matricula m = new Matricula(nroMatricula, codEstudiante, codCurso, fecha, hora);
-        MatriculaService service = new MatriculaService();
-
-        if(service.deleteMatricula(m)){
-            JOptionPane.showMessageDialog(null, "MATRÍCULA ELIMINADA");
-
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR AL ELIMINAR MATRÍCULA");
-        }
-        Cleanin();
-        CharginTable();
-    }//GEN-LAST:event_logoDelMouseClicked
-
     private void logoUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoUpMouseClicked
-        // TODO add your handling code here:
-        int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
-        int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
-        int codCurso = Integer.parseInt(txtCdCurso.getText());
-        String fecha = txtDate.getText();
-        String hora = txtHora.getText();
-        
-        Matricula m = new Matricula(nroMatricula, codEstudiante, codCurso, fecha, hora);
-        MatriculaService service = new MatriculaService();
+        try {
+            int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
+            int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
+            int codCurso = Integer.parseInt(txtCdCurso.getText());
+            String fecha = txtDate.getText();
+            String hora = txtHora.getText();
 
-        if(service.updateMatricula(m)){
-            JOptionPane.showMessageDialog(null, "MATRÍCULA MODIFICADO");
+            String statusStr = null;
+            int studentStatus = -1; // Valor inicial no válido
+            boolean inputValid = false;
 
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR AL MODIFICAR LA MATRÍCULA");
+            // --- Bucle de Validación (SOLO PREGUNTA POR 1 O 2) ---
+            while (!inputValid) {
+                // 1. SOLICITAR EL ESTADO AL USUARIO
+                statusStr = JOptionPane.showInputDialog(null,
+                    "Ingrese el nuevo estado del estudiante (1 o 2):",
+                    "Actualizar Estado",
+                    JOptionPane.QUESTION_MESSAGE);
+
+                if (statusStr == null) {
+                    JOptionPane.showMessageDialog(null, "Operación cancelada.");
+                    return;
+                }
+
+                try {
+                    studentStatus = Integer.parseInt(statusStr.trim());
+                    if (studentStatus == 1 || studentStatus == 2) {
+                        inputValid = true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: El estado debe ser 1 (Matriculado) o 2 (Retirado). Intente de nuevo.");
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Error de formato: Ingrese solo los números 1 o 2.");
+                }
+            }
+            // --- FIN Bucle de Validación ---
+
+            Matricula m = new Matricula(nroMatricula, codEstudiante, codCurso, fecha, hora);
+            MatriculaService service = new MatriculaService();
+
+            // 2. Llamar al servicio con el estado variable
+            if(service.updateMatricula(m, studentStatus)){
+                JOptionPane.showMessageDialog(null, "MATRÍCULA MODIFICADO");
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR AL MODIFICAR LA MATRÍCULA");
+            }
+            Cleanin();
+            CharginTable();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que los campos numéricos están completos y son válidos.");
         }
-        Cleanin();
-        CharginTable();
     }//GEN-LAST:event_logoUpMouseClicked
 
+    private void logoDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoDelMouseClicked
+        try {
+            // 1. Validar que tengamos los datos mínimos necesarios
+            if (txtNroMatricula.getText().trim().isEmpty() || txtCdEstudiante.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Seleccione una matrícula de la tabla para eliminar.");
+                return;
+            }
+
+            // 2. Obtener datos clave de los textfields
+            int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
+            int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
+
+            // 3. Confirmación
+            int confirm = JOptionPane.showConfirmDialog(null,
+                "¿Estás seguro de eliminar esta matrícula?\nEl alumno volverá al estado 'Registrado' (0).",
+                "Confirmar Eliminación", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // --- CORRECCIÓN AQUÍ ---
+                // Tu clase Matricula obliga a pasar 5 datos.
+                // Como para eliminar solo nos importa el ID y el Estudiante, llenamos el resto con 0 o "" (datos dummy).
+                Matricula m = new Matricula(nroMatricula, codEstudiante, 0, "", "");
+
+                MatriculaService service = new MatriculaService();
+
+                // 4. Llamamos al servicio pasando '0' para que el alumno regrese a estado Registrado
+                if(service.deleteMatricula(m, 0)){
+                    JOptionPane.showMessageDialog(null, "MATRÍCULA ELIMINADA Y ALUMNO RESTAURADO A ESTADO 0");
+                    Cleanin();      // Limpiar campos
+                    CharginTable(); // Recargar tabla
+                } else {
+                    JOptionPane.showMessageDialog(null, "ERROR AL ELIMINAR. Verifique la base de datos.");
+                }
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error de formato: Verifique que los códigos sean números válidos.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocurrió un error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_logoDelMouseClicked
+
+    private void logoInsertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoInsertMouseClicked
+        try {
+            int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
+            int codEstudiante = Integer.parseInt(txtCdEstudiante.getText());
+            int codCurso = Integer.parseInt(txtCdCurso.getText());
+            String fecha = txtDate.getText();
+            String hora = txtHora.getText();
+
+            // --- CAMBIO CLAVE: Estado fijo a 1 (Matriculado) ---
+            int studentStatus = 1;
+            // ----------------------------------------------------
+
+            Matricula m = new Matricula(nroMatricula, codEstudiante, codCurso, fecha, hora);
+            MatriculaService service = new MatriculaService();
+
+            // 2. Llamar al servicio con el estado fijo
+            if(service.addMatricula(m, studentStatus)){
+                JOptionPane.showMessageDialog(null, "MATRÍCULA REGISTRADA CON EXITO");
+
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR EN EL REGISTRO DE LA MATRÍCULA");
+            }
+            CharginTable();
+            Cleanin();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que los campos numéricos están completos y son válidos.");
+        }
+    }//GEN-LAST:event_logoInsertMouseClicked
+
+    
+    
+    
+    
     
   private void Cleanin(){
         txtNroMatricula.setText("");
@@ -373,137 +431,118 @@ public class MatriculaPane extends javax.swing.JPanel {
         txtHora.setText("");
     }
     
-        private void CharginTable(){
-        DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        model.setRowCount(0);
-
-        PreparedStatement ps;
-        ResultSet rs;
-        ResultSetMetaData rmds;
-        int qeue;
-
-        // El largo de las columnas ajustado a las 6 columnas visibles
-        int[]length ={60, 180, 180, 70, 80, 60}; 
-        for(int i= 0; i<tb.getColumnCount();i++){
-          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
-        }
-
-        try {
-            ConnectionDB connDB = new ConnectionDB();
-            java.sql.Connection cn = connDB.getConnection();
-
-            // --- CAMBIO CLAVE: Se añade el filtro WHERE a.estado = 1 ---
-            String sql = "SELECT m.numero_Matricula, " +
-                         "CONCAT(a.nombres, ' ', a.apellidos) AS nombre_estudiante, " +
-                         "c.asignatura, " +
-                         "m.fecha, " +
-                         "m.hora, " +
-                         "a.estado " + 
-                         "FROM matricula m " +
-                         "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
-                         "JOIN curso c ON m.codigo_Curso = c.codigo_Curso " +
-                         "WHERE a.estado = 1 " + // <--- ¡FILTRO APLICADO!
-                         "ORDER BY m.fecha ASC, m.numero_Matricula ASC;";
-
-            ps = cn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount(); 
-
-            while (rs.next()) {
-                Object[] a = new Object[qeue];
-                for(int x = 0; x<qeue; x++){
-                    a[x] = rs.getObject(x+1);
-                }
-                model.addRow(a);
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e.toString());
-        }       
+private void CharginTable(){
+    DefaultTableModel model = (DefaultTableModel) tb.getModel();
+    model.setRowCount(0);
+    
+    PreparedStatement ps;
+    ResultSet rs;
+    ResultSetMetaData rmds;
+    int qeue;
+    
+    // Se ajusta el array a 5 columnas: Matrícula, Estudiante, Curso, Fecha, Hora
+    int[]length ={60, 100, 100, 70, 80}; 
+    for(int i= 0; i<tb.getColumnCount();i++){
+      tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
     }
+    
+    try {
+        ConnectionDB connDB = new ConnectionDB();
+        java.sql.Connection cn = connDB.getConnection();
         
-      private void CharginTable2(String filtro){
-        DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        model.setRowCount(0);
+        // --- CAMBIO CLAVE: SELECT * FROM Matricula (solo 5 columnas) ---
+        String sql = "SELECT m.numero_Matricula, m.codigo_Estudiante, m.codigo_Curso, m.fecha, m.hora " +
+             "FROM Matricula m INNER JOIN Alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
+             "WHERE a.estado = 1 ORDER BY m.fecha ASC;";
+        
+        ps = cn.prepareStatement(sql);
+        
+        rs=ps.executeQuery();
+        rmds = rs.getMetaData();
+        qeue = rmds.getColumnCount(); // qeue ahora será 5
+        
+        while (rs.next()) {
+            Object[] a = new Object[qeue];
+            for(int x = 0; x<qeue; x++){
+                a[x] = rs.getObject(x+1);
+            }
+            model.addRow(a);
+        }
+                        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,e.toString());
+    }       
+}
+        
+  private void CharginTable2(String filtro){
+    DefaultTableModel model = (DefaultTableModel) tb.getModel();
+    model.setRowCount(0);
 
-        PreparedStatement ps;
-        ResultSet rs;
-        ResultSetMetaData rmds;
-        int qeue;
-        boolean searched = false;
+    PreparedStatement ps;
+    ResultSet rs;
+    ResultSetMetaData rmds;
+    int qeue;
+    boolean searched = false;
 
-        // El largo de las columnas ajustado a las 6 columnas visibles
-        int[]length ={60, 180, 180, 70, 80, 60}; 
-        for(int i= 0; i<tb.getColumnCount();i++){
-          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+    // Se ajusta el array a 5 columnas: Matrícula, Estudiante, Curso, Fecha, Hora
+    int[]length ={60, 100, 100, 70, 80}; 
+    for(int i= 0; i<tb.getColumnCount();i++){
+        tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+    }
+
+    try {
+        ConnectionDB connDB = new ConnectionDB();
+        java.sql.Connection cn = connDB.getConnection();
+
+        String sql;
+        
+        // Consulta base con 5 columnas
+        String baseSelect = "SELECT numero_Matricula, codigo_Estudiante, codigo_Curso, fecha, hora FROM matricula "; 
+
+        if (filtro.equals("")) {
+            // Caso 1: Sin filtro de búsqueda
+            sql = baseSelect + "ORDER BY fecha ASC, numero_Matricula ASC;";
+            ps = cn.prepareStatement(sql);
+        } else {
+            // Caso 2: Con filtro de búsqueda, buscamos por numero_Matricula
+            sql = baseSelect + "WHERE numero_Matricula LIKE ? " +
+                    "ORDER BY fecha ASC, numero_Matricula ASC;";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1,"%"+filtro+ "%");
         }
 
-        try {
-            ConnectionDB connDB = new ConnectionDB();
-            java.sql.Connection cn = connDB.getConnection();
+        rs=ps.executeQuery();
+        rmds = rs.getMetaData();
+        qeue = rmds.getColumnCount(); // qeue = 5
 
-            String sql;
+        while (rs.next()) {
+            Object[] a = new Object[qeue];
+            for(int x = 0; x<qeue; x++){
+                a[x] = rs.getObject(x+1);
+            }
+            model.addRow(a);
+            searched = true;
+        }
 
-            // Consulta base para seleccionar Nombres y Estado
-            String baseSelect = "SELECT m.numero_Matricula, " +
-                             "CONCAT(a.nombres, ' ', a.apellidos) AS nombre_estudiante, " +
-                             "c.asignatura, " +
-                             "m.fecha, " +
-                             "m.hora, " +
-                             "a.estado " + 
-                             "FROM matricula m " +
-                             "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
-                             "JOIN curso c ON m.codigo_Curso = c.codigo_Curso " +
-                             "WHERE a.estado = 1 "; // <--- FILTRO BASE APLICADO
-
-            if (filtro.equals("")) {
-                // Caso 1: Sin filtro de búsqueda
-                sql = baseSelect + "ORDER BY m.fecha ASC;";
-                ps = cn.prepareStatement(sql);
+        if(!filtro.equals("")){
+            if (searched) {
+                JOptionPane.showMessageDialog(null, "MATRÍCULA ENCONTRADA");
             } else {
-                // Caso 2: Con filtro de búsqueda, añadimos el criterio de búsqueda (manteniendo el filtro estado=1)
-                sql = baseSelect + "AND (CONCAT(a.nombres, ' ', a.apellidos) LIKE ? OR c.asignatura LIKE ?) " +
-                         "ORDER BY m.fecha ASC;";
-                ps = cn.prepareStatement(sql);
-                ps.setString(1,"%"+filtro+ "%"); // Busca por Nombre Estudiante
-                ps.setString(2,"%"+filtro+ "%"); // Busca por Nombre Curso
+                JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON MATRICULAS CON ESE CRITERIO");
+                // Cleanin();
+                // txtBuscado.setText("");
             }
-
-            rs=ps.executeQuery();
-            rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount(); 
-
-            while (rs.next()) {
-                Object[] a = new Object[qeue];
-                for(int x = 0; x<qeue; x++){
-                    a[x] = rs.getObject(x+1);
-                }
-                model.addRow(a);
-                searched = true;
-            }
-
-            if(!filtro.equals("")){
-                if (searched) {
-                    JOptionPane.showMessageDialog(null, "MATRÍCULA ENCONTRADA");
-                } else {
-                    // Mensaje ajustado: si no se encuentra, es porque no está matriculado O no coincide con el filtro.
-                    JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON MATRÍCULAS ACTIVAS CON ESE CRITERIO");
-                    // Cleanin();  
-                    // txtBuscado.setText("");
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.toString());
         }
-    }      
-
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null,e.toString());
+    }
+}
       
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contenido1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel6;

@@ -17,6 +17,10 @@ public class Matricula {
         this.hora = hora;
     }
 
+    public Matricula() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public int getNroMatricula() {
         return nroMatricula;
     }
@@ -55,9 +59,5 @@ public class Matricula {
 
     public void setHora(String hora) {
         this.hora = hora;
-    }
-    
-    
-    
-    
+    }   
 }

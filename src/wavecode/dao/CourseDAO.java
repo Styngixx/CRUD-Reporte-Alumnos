@@ -59,19 +59,39 @@ public class CourseDAO {
         }
     }
     
-    ////This method is for eliminate one of database value
-    public int deleteCourse(Course c) {
-        String sql = "DELETE FROM curso WHERE codigo_Curso=?;";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, c.getCodeCourse());
-            return pstmt.executeUpdate(); // devuelve 1 si se insertó correctamente
-        } catch (SQLException e) {
-            System.out.println("Error al eliminar el curso: " + e.getMessage());
-            return 0;
+    public boolean hasStudents(int codeCourse) {
+    String sql = "SELECT COUNT(*) FROM Matricula WHERE codigo_Curso = ?";
+    try {
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, codeCourse);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Retorna true si hay alumnos
         }
-    }   
+    } catch (SQLException e) {
+        System.out.println("Error al verificar alumnos en curso: " + e.getMessage());
+    }
+    return false;
+}
     
+    ////This method is for eliminate one of database value
+public int deleteCourse(Course c) {
+    if (hasStudents(c.getCodeCourse())) {
+        // Retornamos -1 para indicar que no se puede borrar por restricción
+        return -1; 
+    }
+    String sql = "DELETE FROM curso WHERE codigo_Curso=?;";
+    try {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, c.getCodeCourse());
+        return pstmt.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error al eliminar el curso: " + e.getMessage());
+        return 0;
+    }
     
+} 
     
 }
+
+

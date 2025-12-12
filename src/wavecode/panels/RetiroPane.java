@@ -62,23 +62,23 @@ public class RetiroPane extends javax.swing.JPanel {
         logoDel = new javax.swing.JLabel();
         logoUp = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(51, 138, 159));
+        jPanel1.setBackground(new java.awt.Color(142, 181, 204));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tb.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         tb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Numero Retiro", "Matricula", "Fecha", "Hora", "Estado de Matricula"
+                "Numero Retiro", "Matricula", "Fecha", "Hora"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -106,8 +106,6 @@ public class RetiroPane extends javax.swing.JPanel {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Número Retiro:");
         contenido1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, -1, -1));
-
-        txtNroRetiro.setEditable(false);
         contenido1.add(txtNroRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 290, -1));
 
         jLabel9.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -120,8 +118,6 @@ public class RetiroPane extends javax.swing.JPanel {
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Número Matrícula:");
         contenido1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 50, -1, -1));
-
-        txtNroMatricula.setEditable(false);
         contenido1.add(txtNroMatricula, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 70, 280, -1));
 
         jLabel13.setFont(new java.awt.Font("Roboto Medium", 0, 14)); // NOI18N
@@ -142,7 +138,7 @@ public class RetiroPane extends javax.swing.JPanel {
 
         tittle1.setFont(new java.awt.Font("Roboto", 1, 24)); // NOI18N
         tittle1.setText("CONFIGURACIÓN DE RETIROS");
-        jPanel1.add(tittle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 390, 50));
+        jPanel1.add(tittle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 350, 50));
 
         jPanel2.setBackground(new java.awt.Color(116, 162, 192));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -214,7 +210,7 @@ public class RetiroPane extends javax.swing.JPanel {
                 logoInsertMouseClicked(evt);
             }
         });
-        jPanel1.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 520, 80, 70));
+        jPanel1.add(logoInsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 390, 80, 70));
 
         logoDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoDel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -222,7 +218,7 @@ public class RetiroPane extends javax.swing.JPanel {
                 logoDelMouseClicked(evt);
             }
         });
-        jPanel1.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 610, 80, 60));
+        jPanel1.add(logoDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 580, 80, 70));
 
         logoUp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         logoUp.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -230,7 +226,7 @@ public class RetiroPane extends javax.swing.JPanel {
                 logoUpMouseClicked(evt);
             }
         });
-        jPanel1.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 520, 80, 70));
+        jPanel1.add(logoUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 480, 80, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -288,16 +284,21 @@ public class RetiroPane extends javax.swing.JPanel {
     }//GEN-LAST:event_labelReiniciarMouseClicked
 
     private void logoInsertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoInsertMouseClicked
-        // TODO add your handling code here:
+        try {
         int nroRetiro = Integer.parseInt(txtNroRetiro.getText());
         int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
         String fecha = txtDate.getText();
         String hora = txtHora.getText();
 
+        // 1. SOLICITAR EL ESTADO AL USUARIO
+       
+        int studentStatus =2;
+
         Retiro r = new Retiro(nroRetiro, nroMatricula, fecha, hora);
         RetiroService service = new RetiroService();
 
-        if(service.addRetiro(r)){
+        // 2. Llamar al servicio con el estado variable
+        if(service.addRetiro(r, studentStatus)){
             JOptionPane.showMessageDialog(null, "RETIRO REGISTRADO CON EXITO");
 
         }else{
@@ -305,39 +306,81 @@ public class RetiroPane extends javax.swing.JPanel {
         }
         CharginTable();
         Cleanin();
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que todos los campos son números válidos.");
+    }
     }//GEN-LAST:event_logoInsertMouseClicked
 
     private void logoDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoDelMouseClicked
-        // TODO add your handling code here:
-        int nroRetiro = Integer.parseInt(txtNroRetiro.getText());
-        int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
-        String fecha = txtDate.getText();
-        String hora = txtHora.getText();
+    try {
+           // Validamos que haya un retiro seleccionado (que el campo ID no esté vacío)
+           if (txtNroRetiro.getText().trim().isEmpty()) {
+               JOptionPane.showMessageDialog(null, "Por favor, seleccione un retiro de la tabla para eliminar.");
+               return;
+           }
 
-        Retiro r = new Retiro(nroRetiro, nroMatricula, fecha, hora);
-        RetiroService service = new RetiroService();
+           // 1. Obtener datos
+           int nroRetiro = Integer.parseInt(txtNroRetiro.getText());
+           int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
+           String fecha = txtDate.getText();
+           String hora = txtHora.getText();
 
-        if(service.deleteRetiro(r)){
-            JOptionPane.showMessageDialog(null, "RETIRO ELIMINADO");
+           // 2. Confirmación
+           int confirm = JOptionPane.showConfirmDialog(null, 
+                   "¿Está seguro que desea eliminar este retiro?\n" +
+                   "El alumno volverá al estado 'Matriculado' (1) y desaparecerá de esta lista.", 
+                   "Confirmar Eliminación", 
+                   JOptionPane.YES_NO_OPTION, 
+                   JOptionPane.WARNING_MESSAGE);
 
-        }else{
-            JOptionPane.showMessageDialog(null, "ERROR AL ELIMINAR RETIRO");
-        }
-        Cleanin();
-        CharginTable();
+           if (confirm == JOptionPane.YES_OPTION) {
+               // 3. Crear el objeto y el servicio
+               Retiro r = new Retiro(nroRetiro, nroMatricula, fecha, hora);
+               RetiroService service = new RetiroService();
+
+               // 4. Ejecutar eliminación devolviendo el estado a 1 (Matriculado)
+               if (service.deleteRetiro(r, 1)) {
+                   JOptionPane.showMessageDialog(null, "RETIRO ELIMINADO EXITOSAMENTE.\nEl alumno ha sido restaurado a estado Matriculado.");
+                   Cleanin();      // Limpiar campos
+                   CharginTable(); // Recargar tabla (el alumno se irá porque ya no es estado 2)
+               } else {
+                   JOptionPane.showMessageDialog(null, "ERROR: No se pudo eliminar el retiro.");
+               }
+           }
+
+       } catch (NumberFormatException e) {
+           JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que los campos numéricos sean válidos.");
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + e.getMessage());
+       }
     }//GEN-LAST:event_logoDelMouseClicked
 
     private void logoUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoUpMouseClicked
-        // TODO add your handling code here:
+        try {
         int nroRetiro = Integer.parseInt(txtNroRetiro.getText());
         int nroMatricula = Integer.parseInt(txtNroMatricula.getText());
         String fecha = txtDate.getText();
         String hora = txtHora.getText();
 
+        // 1. SOLICITAR EL ESTADO AL USUARIO
+        String statusStr = JOptionPane.showInputDialog(null, 
+                                                       "Ingrese el nuevo estado del estudiante (1 o 2):", 
+                                                       "Actualizar Estado", 
+                                                       JOptionPane.QUESTION_MESSAGE);
+        
+        if (statusStr == null || statusStr.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Operación cancelada. Debe ingresar un estado.");
+            return;
+        }
+        
+        int studentStatus = Integer.parseInt(statusStr); 
+
         Retiro r = new Retiro(nroRetiro, nroMatricula, fecha, hora);
         RetiroService service = new RetiroService();
 
-        if(service.updateRetiro(r)){
+        // 2. Llamar al servicio con el estado variable
+        if(service.updateRetiro(r, studentStatus)){
             JOptionPane.showMessageDialog(null, "RETIRO MODIFICADO");
 
         }else{
@@ -345,6 +388,10 @@ public class RetiroPane extends javax.swing.JPanel {
         }
         Cleanin();
         CharginTable();
+        
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de que todos los campos son números válidos.");
+    }
     }//GEN-LAST:event_logoUpMouseClicked
 
       
@@ -355,120 +402,114 @@ public class RetiroPane extends javax.swing.JPanel {
         txtHora.setText("");
     }
     
-    private void CharginTable(){
-        DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        model.setRowCount(0);
+  private void CharginTable(){
+    DefaultTableModel model = (DefaultTableModel) tb.getModel();
+    model.setRowCount(0);
+    
+    PreparedStatement ps;
+    ResultSet rs;
+    ResultSetMetaData rmds;
+    int qeue;
+    
+    // Se ajusta el array a 4 columnas: Retiro, Matrícula, Fecha, Hora
+    int[]length ={100, 100, 100, 100}; 
+    for(int i= 0; i<tb.getColumnCount();i++){
+      tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+    }
+    
+    try {
+        ConnectionDB connDB = new ConnectionDB();
+        java.sql.Connection cn = connDB.getConnection();
+        
+        // Consulta para ver retiros de alumnos con estado 2
 
-        PreparedStatement ps;
-        ResultSet rs;
-        ResultSetMetaData rmds;
-        int qeue;
+        String sql = "SELECT r.numero_Retiro, r.matricula, r.fecha, r.hora " +
+                     "FROM Retiro r " +
+                     "JOIN Matricula m ON r.matricula = m.numero_Matricula " +
+                     "JOIN Alumno a ON m.codigo_Estudiante = a.cod_Alumno " +
+                     "WHERE a.estado = 2 ORDER BY r.fecha ASC;";
 
-        // Ajustado para 5 columnas: Retiro, Matrícula, Fecha, Hora, Estado
-        int[]length ={100, 100, 100, 100, 80}; 
-        for(int i= 0; i<tb.getColumnCount();i++){
-          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+        ps = cn.prepareStatement(sql);
+        rs = ps.executeQuery();
+        rmds = rs.getMetaData();
+        qeue = rmds.getColumnCount(); // qeue será 4
+        
+        while (rs.next()) {
+            Object[] a = new Object[qeue]; // Tamaño de array 4
+            for(int x = 0; x<qeue; x++){
+                a[x] = rs.getObject(x+1);
+            }
+            model.addRow(a);
         }
+                        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,e.toString());
+    }       
+}
+    
+   private void CharginTable2(String filtro){
+    DefaultTableModel model = (DefaultTableModel) tb.getModel();
+    model.setRowCount(0);
 
-        try {
-            ConnectionDB connDB = new ConnectionDB();
-            java.sql.Connection cn = connDB.getConnection();
+    PreparedStatement ps;
+    ResultSet rs;
+    ResultSetMetaData rmds;
+    int qeue;
+    boolean searched = false;
 
-            // --- SQL MODIFICADO: Añade el estado y el filtro 'estado = 2' ---
-            String sql = "SELECT r.numero_Retiro, r.matricula, r.fecha, r.hora, a.estado " + 
-                         "FROM Retiro r " +
-                         "JOIN matricula m ON r.matricula = m.numero_Matricula " + 
-                         "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +    
-                         "WHERE a.estado = 2 " + // FILTRO ESTADO = 2
-                         "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
+    // Se ajusta el array a 4 columnas: Retiro, Matrícula, Fecha, Hora
+    int[]length ={100, 100, 100, 100, 80}; // Nota: Si solo usas 4 columnas, este array debería ser de tamaño 4.
+    for(int i= 0; i<tb.getColumnCount();i++){
+      tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+    }
 
+    try {
+        ConnectionDB connDB = new ConnectionDB();
+        java.sql.Connection cn = connDB.getConnection();
+
+        String sql;
+
+        // Base Select sin joins
+        String baseSelect = "SELECT numero_Retiro, matricula, fecha, hora FROM Retiro ";
+
+        if (filtro.equals("")) {
+            // Caso 1: Sin filtro de búsqueda
+            sql = baseSelect + "ORDER BY fecha ASC, numero_Retiro ASC;";
             ps = cn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount(); // qeue ahora será 5
-
-            while (rs.next()) {
-                Object[] a = new Object[qeue]; // Tamaño de array 5
-                for(int x = 0; x<qeue; x++){
-                    a[x] = rs.getObject(x+1);
-                }
-                model.addRow(a);
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e.toString());
-        }       
-    }
-    
-    
-    private void CharginTable2(String filtro){
-        DefaultTableModel model = (DefaultTableModel) tb.getModel();
-        model.setRowCount(0);
-
-        PreparedStatement ps;
-        ResultSet rs;
-        ResultSetMetaData rmds;
-        int qeue;
-        boolean searched = false;
-
-        // Ajustado para 5 columnas: Retiro, Matrícula, Fecha, Hora, Estado
-        int[]length ={100, 100, 100, 100, 80};
-        for(int i= 0; i<tb.getColumnCount();i++){
-          tb.getColumnModel().getColumn(i).setPreferredWidth(length[i]);
+        } else {
+            // Caso 2: Con filtro de búsqueda en numero_Retiro
+            sql = baseSelect + "WHERE numero_Retiro LIKE ? " + 
+                     "ORDER BY fecha ASC, numero_Retiro ASC;";
+            ps = cn.prepareStatement(sql);
+            ps.setString(1,"%"+filtro+ "%"); 
         }
 
-        try {
-            ConnectionDB connDB = new ConnectionDB();
-            java.sql.Connection cn = connDB.getConnection();
+        rs=ps.executeQuery();
+        rmds = rs.getMetaData();
+        qeue = rmds.getColumnCount(); // qeue será 4
 
-            String sql;
-
-            // Consulta base con JOINs y el filtro principal (estado = 2)
-            String baseSelect = "SELECT r.numero_Retiro, r.matricula, r.fecha, r.hora, a.estado " +
-                                "FROM Retiro r " +
-                                "JOIN matricula m ON r.matricula = m.numero_Matricula " + 
-                                "JOIN alumno a ON m.codigo_Estudiante = a.cod_Alumno " +    
-                                "WHERE a.estado = 2 "; // FILTRO BASE
-
-            if (filtro.equals("")) {
-                // Caso 1: Sin filtro de búsqueda
-                sql = baseSelect + "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
-                ps = cn.prepareStatement(sql);
-            } else {
-                // Caso 2: Con filtro de búsqueda, añadimos el criterio al filtro base
-                sql = baseSelect + "AND r.numero_Retiro LIKE ? " + 
-                         "ORDER BY r.fecha ASC, r.numero_Retiro ASC;";
-                ps = cn.prepareStatement(sql);
-                ps.setString(1,"%"+filtro+ "%"); 
-            }
-
-            rs=ps.executeQuery();
-            rmds = rs.getMetaData();
-            qeue = rmds.getColumnCount(); // qeue ahora será 5
-
-            while (rs.next()) {
-                 Object[] a = new Object[qeue]; // Tamaño de array 5
-                 for(int x = 0; x<qeue; x++){
-                     a[x] = rs.getObject(x+1);
-                 }
-                 model.addRow(a);
-                 searched = true;
+        while (rs.next()) {
+             Object[] a = new Object[qeue]; // Tamaño de array 4
+             for(int x = 0; x<qeue; x++){
+                 a[x] = rs.getObject(x+1);
              }
+             model.addRow(a);
+             searched = true;
+         }
 
-            if(!filtro.equals("")){
-                if (searched) {
-                    JOptionPane.showMessageDialog(null, "RETIRO ENCONTRADO");
-                } else {
-                    JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON RETIROS CON ESE CRITERIO");
-                    Cleanin();
-                    txtBuscado.setText("");
-                }
+        if(!filtro.equals("")){
+            if (searched) {
+                JOptionPane.showMessageDialog(null, "RETIRO ENCONTRADO");
+            } else {
+                JOptionPane.showMessageDialog(null, "NO SE ENCONTRARON RETIROS CON ESE CRITERIO");
+                // Cleanin();
+                // txtBuscado.setText("");
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,e.toString());
         }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null,e.toString());
     }
-
+}
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contenido1;
